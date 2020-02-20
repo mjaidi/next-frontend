@@ -13,18 +13,16 @@ const actions = {
     return dispatch => {
       return client
         .post(`/login`, {
-          user: {
-            email: values.email,
-            password: values.password
-          }
+          email: values.email,
+          password: values.password
         })
         .then(res => {
           console.log(res);
-          authStorage.persist(res.data, res.headers.authorization, 6000);
+          authStorage.persist(res.data.user, res.data.token, 6000);
           dispatch(action(actionTypes.SET_TOKEN, null));
           dispatch(
             action(actionTypes.LOGIN, {
-              user: res.data,
+              user: res.data.user,
               isLoggedIn: true
             })
           );
@@ -41,10 +39,8 @@ const actions = {
     return dispatch => {
       return client
         .post(`/signup`, {
-          user: {
-            email: values.email,
-            password: values.password
-          }
+          email: values.email,
+          password: values.password
         })
         .then(res => {
           dispatch(actions.login(values));
@@ -55,9 +51,7 @@ const actions = {
     return dispatch => {
       return client
         .post(`/password`, {
-          user: {
-            email: values.email
-          }
+          email: values.email
         })
         .then(res => {
           dispatch(
@@ -73,10 +67,8 @@ const actions = {
     return dispatch => {
       return client
         .patch(`/password`, {
-          user: {
-            password: values.password,
-            reset_password_token: values.token
-          }
+          password: values.password,
+          reset_password_token: values.token
         })
         .then(res => {
           dispatch(
@@ -103,7 +95,7 @@ const actions = {
   },
   clear: () => {
     return dispatch => {
-      authStorage.clear();
+      typeof window !== "undefined" ? authStorage.clear() : null;
       dispatch(action(actionTypes.LOGOUT));
     };
   },

@@ -6,7 +6,7 @@ export const BASE_URL =
   process.env.NODE_ENV !== "production"
     ? "http://localhost:3000"
     : "https://rails-jwt-template-123.herokuapp.com";
-export const BASE_API_URL = `${BASE_URL}/api/v1`;
+export const BASE_API_URL = `${BASE_URL}`;
 
 // Default API will be your root
 const TIMEOUT = 20000;
@@ -57,27 +57,27 @@ export class ApiService {
   }
 
   get(path) {
-    this.headers.headers.Authorization = store.getState().auth.token;
+    this.headers.headers.authorization = store.getState().auth.token;
     return this.client.get(path, this.headers);
   }
 
   post(path, payload) {
-    this.headers.headers.Authorization = store.getState().auth.token;
+    this.headers.headers.authorization = store.getState().auth.token;
     return this.client.post(path, payload, this.headers);
   }
 
   put(path, payload) {
-    this.headers.headers.Authorization = store.getState().auth.token;
+    this.headers.headers.authorization = store.getState().auth.token;
     return this.client.put(path, payload, this.headers);
   }
 
   patch(path, payload) {
-    this.headers.headers.Authorization = store.getState().auth.token;
+    this.headers.headers.authorization = store.getState().auth.token;
     return this.client.patch(path, payload, this.headers);
   }
 
   delete(path) {
-    this.headers.headers.Authorization = store.getState().auth.token;
+    this.headers.headers.authorization = store.getState().auth.token;
     return this.client.delete(path, this.headers);
   }
 }

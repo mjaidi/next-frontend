@@ -1,19 +1,7 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import React from "react";
 import RegistrationForm from "components/RegistrationForm";
-import Router from "next/router";
+import requireNotLoggedIn from "higher_order_components/requireNotLoggedIn";
 
-const SignUpForm = ({ isLoggedIn }) => {
-  useEffect(() => {
-    if (isLoggedIn) {
-      Router.push("/");
-    }
-  });
-  return <RegistrationForm formType="SignUp" />;
-};
+const SignUpForm = () => <RegistrationForm formType="SignUp" />;
 
-const mapStateToProps = state => ({
-  isLoggedIn: state.auth.isLoggedIn
-});
-
-export default connect(mapStateToProps)(SignUpForm);
+export default requireNotLoggedIn(SignUpForm);

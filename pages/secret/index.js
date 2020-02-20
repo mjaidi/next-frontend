@@ -3,15 +3,16 @@ import { connect } from "react-redux";
 import Navbar from "components/navigation/Navbar";
 import actions from "store/secret/actions";
 import Router from "next/router";
+import { isAuthorizedRoute } from "utils/auth_roles";
 
-const Main = ({ message, getMessage, isLoggedIn }) => {
+const Secret = ({ message, getMessage, isLoggedIn, role }) => {
   useEffect(() => {
-    if (!isLoggedIn) {
-      Router.push("/");
+    if (!isLoggedIn || !isAuthorizedRoute(Router.pathname, role)) {
+      Router.replace("/");
     } else {
       getMessage();
     }
-  });
+  }, []);
   return (
     <div>
       <Navbar />
@@ -26,7 +27,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   message: state.secret.message,
-  isLoggedIn: state.auth.isLoggedIn
+  isLoggedIn: state.auth.isLoggedIn,
+  role: state.auth.user ? state.auth.user.role : null
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Secret);

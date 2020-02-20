@@ -1,17 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import Navbar from "components/navigation/Navbar";
 import actions from "store/admin/actions";
 import Router from "next/router";
+import { isAuthorizedRoute } from "utils/auth_roles";
 
-const Admin = ({ message, getMessage, isLoggedIn }) => {
+const Admin = ({ getMessage, message, isLoggedIn, role }) => {
   useEffect(() => {
-    if (!isLoggedIn) {
-      Router.push("/");
+    if (!isLoggedIn || !isAuthorizedRoute(Router.pathname, role)) {
+      Router.replace("/");
     } else {
       getMessage();
     }
-  });
+  }, []);
   return (
     <div>
       <Navbar />
@@ -26,7 +27,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   message: state.admin.message,
-  isLoggedIn: state.auth.isLoggedIn
+  isLoggedIn: state.auth.isLoggedIn,
+  role: state.auth.user ? state.auth.user.role : null
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);

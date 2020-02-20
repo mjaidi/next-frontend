@@ -18,12 +18,18 @@ export default withRedux(makeStore, { debug: true })(
         }
       };
     }
-    componentDidMount() {
-      const token = localStorage.getItem("token");
+
+    render() {
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       if (!token) {
         fullStore.dispatch(actions.clear());
       } else {
-        const tokenExpDate = new Date(localStorage.getItem("tokenExpDate"));
+        const tokenFromStorage =
+          typeof window !== "undefined"
+            ? localStorage.getItem("tokenExpDate")
+            : null;
+        const tokenExpDate = new Date(tokenFromStorage);
         // if token hasn't expired
         if (tokenExpDate > new Date()) {
           fullStore.dispatch(actions.setLoggedIn());
@@ -32,9 +38,6 @@ export default withRedux(makeStore, { debug: true })(
           fullStore.dispatch(actions.clear());
         }
       }
-    }
-
-    render() {
       const { Component, pageProps, store } = this.props;
 
       return (
